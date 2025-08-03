@@ -4,7 +4,6 @@ import { Terminal } from 'xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import 'xterm/css/xterm.css';
-import './terminal.css';
 
 function App() {
     const socketRef = useRef(null);
@@ -13,18 +12,30 @@ function App() {
     const fitAddonRef = useRef(null);
 
     useEffect(() => {
-        // Initialize xterm.js
+        // Add custom styles to hide scrollbar
+        const style = document.createElement('style');
+        style.textContent = `
+            .xterm .xterm-viewport::-webkit-scrollbar {
+                display: none;
+            }
+            .xterm .xterm-viewport {
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+        `;
+        document.head.appendChild(style);
+
         const terminal = new Terminal({
             cursorBlink: true,
             fontSize: 14,
             fontFamily: 'Monaco, Menlo, Ubuntu Mono, Consolas, monospace',
             theme: {
-                background: '#1a1b26',          // Tokyo Night background
-                foreground: '#c0caf5',          // Tokyo Night foreground (brighter)
-                cursor: '#f7768e',              // Tokyo Night red
-                cursorAccent: '#1a1b26',        // Cursor text color
-                selection: '#283457',           // Tokyo Night selection (darker)
-                selectionForeground: '#c0caf5', // Selection text
+                background: '#1a1b26',
+                foreground: '#c0caf5',
+                cursor: '#f7768e',
+                cursorAccent: '#1a1b26',
+                selection: '#283457',
+                selectionForeground: '#c0caf5',
                 black: '#15161e',
                 red: '#f7768e',
                 green: '#9ece6a',
@@ -58,13 +69,11 @@ function App() {
         xtermRef.current = terminal;
         fitAddonRef.current = fitAddon;
 
-        // Socket.IO connection
         socketRef.current = io('http://localhost:8000/linux', {
             transports: ['websocket', 'polling'],
             cors: { origin: '*' }
         });
 
-        // Handle socket events
         socketRef.current.on('connect', () => {
             console.log('Connected to server');
         });
@@ -73,12 +82,10 @@ function App() {
             terminal.write(data);
         });
 
-        // Handle terminal input
         terminal.onData((data) => {
             socketRef.current.emit('key', data);
         });
 
-        // Handle terminal resize
         terminal.onResize(({ cols, rows }) => {
             socketRef.current.emit('resize', { cols, rows });
         });
@@ -93,24 +100,27 @@ function App() {
             terminal.dispose();
             socketRef.current?.disconnect();
             window.removeEventListener('resize', handleResize);
+            document.head.removeChild(style);
         };
     }, []);
 
     return (
-        <div className="desktop">
-        <div className="terminal-window">
-        <div className="terminal-header">
-        <div className="terminal-buttons">
-        <span className="btn close"></span>
-        <span className="btn minimize"></span>
-        <span className="btn maximize"></span>
-        </div>
-        <div className="terminal-title">Terminal</div>
-        </div>
-        <div className="terminal-body">
-        <div ref={terminalRef} className="xterm-container" />
-        </div>
-        </div>
+        <div className="w-screen h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-10">
+            <div className="w-[800px] h-[600px] bg-[#1a1b26] rounded-lg shadow-2xl border border-slate-600 flex flex-col overflow-hidden">
+                <div className="bg-slate-700 h-10 flex items-center px-4 border-b border-slate-600 flex-shrink-0 relative">
+                    <div className="flex gap-2">
+                        <span className="w-3 h-3 bg-red-500 rounded-full" />
+                        <span className="w-3 h-3 bg-yellow-500 rounded-full" />
+                        <span className="w-3 h-3 bg-green-500 rounded-full" />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span className="text-slate-300 text-sm font-medium">Terminal</span>
+                    </div>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                    <div ref={terminalRef} className="w-full h-full p-2" />
+                </div>
+            </div>
         </div>
     );
 }
