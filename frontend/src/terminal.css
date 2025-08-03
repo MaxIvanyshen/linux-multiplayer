@@ -1,0 +1,128 @@
+/* Reset and body styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+}
+
+/* Desktop background */
+/* Tokyo Night desktop gradient */
+.desktop {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1b26 0%, #292e42 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Tokyo Night terminal window */
+.terminal-window {
+  width: 800px;
+  height: 600px;
+  background: #1a1b26;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #565f89;
+}
+
+/* Tokyo Night terminal header */
+.terminal-header {
+  background: #292e42;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid #414868;
+  flex-shrink: 0;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.btn.close { background: #f7768e; }
+.btn.minimize { background: #e0af68; }
+.btn.maximize { background: #9ece6a; }
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  color: #a9b1d6;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Tokyo Night terminal body */
+.terminal-body {
+  flex: 1;
+  background: #1a1b26;
+  overflow: hidden;
+}
+
+/* XTerm container */
+.xterm-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.xterm {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.xterm-viewport {
+  background: transparent !important;
+}
+
+.xterm-screen {
+  background: transparent !important;
+}
+/* Tokyo Night scrollbar styling */
+.xterm .xterm-viewport::-webkit-scrollbar {
+  width: 8px;
+}
+
+.xterm .xterm-viewport::-webkit-scrollbar-track {
+  background: #1a1b26; /* Tokyo Night background */
+  border-radius: 4px;
+}
+
+.xterm .xterm-viewport::-webkit-scrollbar-thumb {
+  background: #565f89; /* Tokyo Night comment color */
+  border-radius: 4px;
+  border: 1px solid #414868; /* Slightly darker border */
+}
+
+.xterm .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: #7aa2f7; /* Tokyo Night blue on hover */
+}
+
+.xterm .xterm-viewport::-webkit-scrollbar-corner {
+  background: #1a1b26;
+}
+
+/* Firefox scrollbar */
+.xterm .xterm-viewport {
+  scrollbar-width: thin;
+  scrollbar-color: #565f89 #1a1b26;
+}
+
